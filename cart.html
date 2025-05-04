@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black text-white p-6">
+  <div class="max-w-xl mx-auto bg-gray-700 p-6 rounded-xl">
+    <h1 class="text-2xl font-bold mb-4">Cart Summary</h1>
+    <p id="totalCost" class="text-lg mb-6">Total Cost: Loading...</p>
+
+    <h2 class="text-xl font-semibold mb-2">Delivery Address</h2>
+    <form id="addressForm" class="space-y-4">
+      <input type="text" id="fullName" placeholder="Full Name" class="w-full p-2 rounded text-black" required />
+      <input type="text" id="address" placeholder="Address" class="w-full p-2 rounded text-black" required />
+      <input type="text" id="landmark" placeholder="Landmark" class="w-full p-2 rounded text-black" required />
+      <input type="text" id="pincode" placeholder="Pin Code" class="w-full p-2 rounded text-black" required />
+
+      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+        Proceed to Payment
+      </button>
+    </form>
+
+    <div id="paymentSection" class="hidden mt-6">
+      <h2 class="text-xl font-semibold mb-2">Scan to Pay</h2>
+      <img id="qrCode" src="" alt="QR Code" class="w-48 h-48 mx-auto" />
+    </div>
+  </div>
+
+  <script>
+    const total = localStorage.getItem("cartTotal") || 0;
+    document.getElementById("totalCost").textContent = `Total Cost: ₹${parseFloat(total).toFixed(2)}`;
+
+    document.getElementById("addressForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const paymentSection = document.getElementById("paymentSection");
+      const qrCode = document.getElementById("qrCode");
+      const amount = parseFloat(total).toFixed(2);
+
+      const upiID = "7676844820-1@superyes";
+      const qrText = `upi://pay?pa=${upiID}&pn=Shiva%20Kalyan&am=${amount}&cu=INR`;
+      qrCode.src = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qrText)}&size=200x200`;
+      
+      paymentSection.classList.remove("hidden");
+    });
+  </script>
+</body>
+</html>
